@@ -1,7 +1,14 @@
 # TakVPN — Customer Web UI
 
 Standalone Next.js frontend for TakVPN (customer site + user dashboard).  
-Backend API and admin panel run on a separate server (not included in this repo).
+## Related repos
+
+| Repo | Purpose |
+|------|---------|
+| [takvpn-backend](https://github.com/rezashams7577/takvpn-backend) | Go API, worker, bot |
+| [takvpn-admin](https://github.com/rezashams7577/takvpn-admin) | Admin panel |
+
+Backend API and admin panel run on separate servers (not included in this repo).
 
 ## Repository layout
 
@@ -47,13 +54,7 @@ docker compose up -d
 
 ## Sync from monorepo
 
-If you develop in the full `takvpn` repo, run from that repo:
-
-```bash
-./scripts/sync-ui-repo.sh
-```
-
-Then commit and push from this directory.
+This repo is standalone. Develop here directly, or copy changes from a legacy monorepo before deleting it.
 
 ## Deploy on a separate server
 
