@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "@takvpn/shared/styles/themes/user.css";
+@import "@takvpn/shared/styles/theme-base.css";
+@import "@takvpn/shared/styles/panel-form.css";
+
+@font-face {
+  font-family: Vazirmatn;
+  src: url("/fonts/vazirmatn/Vazirmatn-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  src: url("/fonts/vazirmatn/Vazirmatn-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  src: url("/fonts/vazirmatn/Vazirmatn-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+[dir="rtl"] {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+[dir="rtl"] .prose {
+  line-height: 1.8;
+}
+
+[dir="rtl"] input[dir="ltr"],
+[dir="rtl"] textarea[dir="ltr"] {
+  text-align: left;
+}

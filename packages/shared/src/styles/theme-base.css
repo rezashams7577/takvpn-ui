@@ -1,0 +1,11 @@
+/* Shared theme aliases and base body styles */
+
+:root {
+  --background: var(--bg);
+  --foreground: var(--fg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}

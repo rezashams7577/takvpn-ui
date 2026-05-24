@@ -1,0 +1,25 @@
+/* Admin panel theme — edit here to change colors, borders, and surfaces */
+
+:root {
+  --bg: #fcfdfe;
+  --fg: #0f172a;
+  --card: #ffffff;
+  --muted: #6b7c93;
+  --border: #e8eef5;
+  --input-bg: #ffffff;
+  --input-border: #d8e2ec;
+  --focus-ring: #6366f1;
+  --focus-ring-shadow: rgb(99 102 241 / 0.25);
+}
+
+.dark {
+  --bg: #111827;
+  --fg: #f1f5f9;
+  --card: #1e293b;
+  --muted: #94a3b8;
+  --border: #334155;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --focus-ring: #818cf8;
+  --focus-ring-shadow: rgb(129 140 248 / 0.2);
+}

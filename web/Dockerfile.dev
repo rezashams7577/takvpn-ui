@@ -1,0 +1,20 @@
+# Dev image: app source mounted at runtime; Next.js fast refresh.
+ARG REGISTRY=docker.arvancloud.ir/library
+ARG NPM_REGISTRY=https://package-mirror.liara.ir/repository/npm/
+
+FROM ${REGISTRY}/node:20-alpine
+
+ARG NPM_REGISTRY
+
+WORKDIR /app
+
+COPY package.json package-lock.json* .npmrc* ./
+RUN npm config set registry "${NPM_REGISTRY}" \
+    && npm install
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
