@@ -15,6 +15,7 @@
     "./components/forms": "./src/components/forms/index.ts",
     "./components/panel-layout": "./src/components/panel-layout/index.ts",
     "./styles/panel-form.css": "./src/styles/panel-form.css",
+    "./styles/panel-layout.css": "./src/styles/panel-layout.css",
     "./styles/theme-base.css": "./src/styles/theme-base.css",
     "./styles/themes/user.css": "./src/styles/themes/user.css",
     "./styles/themes/admin.css": "./src/styles/themes/admin.css",

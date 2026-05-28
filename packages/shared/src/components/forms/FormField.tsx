@@ -17,6 +17,7 @@ export type FormFieldProps = {
   step?: string;
   min?: string | number;
   minLength?: number;
+  inputMode?: HTMLInputElement["inputMode"];
   multiline?: boolean;
   id?: string;
 };
@@ -34,6 +35,7 @@ export function FormField({
   step,
   min,
   minLength,
+  inputMode,
   multiline,
   id,
 }: FormFieldProps) {
@@ -70,6 +72,7 @@ export function FormField({
           step={step}
           min={min}
           minLength={minLength}
+          inputMode={inputMode}
         />
       )}
     </div>

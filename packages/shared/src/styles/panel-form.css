@@ -5,6 +5,21 @@
   line-height: 1.5;
 }
 
+/* Constrained forms inside panel cards follow document direction (RTL-safe). */
+.panel-section .admin-form {
+  width: 100%;
+  max-width: min(100%, var(--form-max-width));
+  margin-inline: 0;
+}
+
+/* Numeric / crypto fields: LTR text only, not the whole form block. */
+.admin-form--ltr-inputs .admin-field-control,
+.admin-form--ltr-inputs select,
+.admin-form--ltr-inputs .admin-select {
+  direction: ltr;
+  text-align: left;
+}
+
 .admin-form .admin-field-label {
   display: block;
   font-size: 0.75rem;

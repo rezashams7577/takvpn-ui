@@ -10,6 +10,9 @@
   --input-border: #d8e2ec;
   --focus-ring: #3b82f6;
   --focus-ring-shadow: rgb(59 130 246 / 0.25);
+  --panel-padding: 1.5rem;
+  --card-padding: 1.5rem;
+  --form-max-width: 28rem;
 }
 
 .dark {

@@ -3,7 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { formatUsdt, formatWalletBalance } from "@/lib/format";
+import {
+  formatIrr,
+  formatUsdt,
+  formatWalletBalance,
+  normalizeDigits,
+  parseIrr,
+} from "@/lib/format";
 import { FormField, FormSelect, FormSubmit } from "@/components/forms";
 import { PanelSection } from "@/components/layout";
 import {
@@ -31,6 +37,7 @@ export default function WalletPage() {
   const [me, setMe] = useState<Me | null>(null);
   const [activeDeposit, setActiveDeposit] = useState<UsdtDeposit | null>(null);
   const [loading, setLoading] = useState(false);
+  const [tomanDigits, setTomanDigits] = useState("");
   const zarinpalToastShown = useRef(false);
 
   const refreshDeposit = useCallback(async (id: number) => {
@@ -111,16 +118,15 @@ export default function WalletPage() {
   async function onZarinpalSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    const fd = new FormData(e.currentTarget);
-    const amount = parseInt(String(fd.get("amount")), 10);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      toast.error(t("failed"));
+    const amount = parseIrr(tomanDigits);
+    if (!Number.isFinite(amount) || amount < 10000) {
+      toast.error(t("zarinpalMinAmount"));
       setLoading(false);
       return;
     }
     try {
       const res = await createZarinpalDeposit(amount);
-      window.location.href = res.payment_url;
+      window.location.href = res.redirect_url;
     } catch (ex) {
       toast.error(mapApiError(t, ex));
       setLoading(false);
@@ -146,10 +152,7 @@ export default function WalletPage() {
       {me && (
         <div className="mt-4 grid sm:grid-cols-2 gap-4">
           {me.wallets.map((w) => (
-            <div
-              key={w.id || w.currency}
-              className="rounded-lg border border-[var(--border)] p-4"
-            >
+            <div key={w.id || w.currency} className="panel-stat-card">
               <span className="text-sm text-[var(--muted)]">{w.currency}</span>
               <p className="text-xl font-bold">
                 {formatWalletBalance(w.balance, w.currency, locale)}
@@ -167,8 +170,7 @@ export default function WalletPage() {
         {showUsdtForm ? (
           <form
             onSubmit={onUsdtSubmit}
-            className="admin-form max-w-md space-y-3"
-            dir="ltr"
+            className="admin-form admin-form--ltr-inputs space-y-3"
           >
             <FormField
               label={t("usdtAmount")}
@@ -269,15 +271,17 @@ export default function WalletPage() {
         description={t("zarinpalDepositHint")}
         className="mt-6"
       >
-        <form onSubmit={onZarinpalSubmit} className="admin-form max-w-md space-y-3">
+        <form onSubmit={onZarinpalSubmit} className="admin-form space-y-3">
           <FormField
             label={t("amountToman")}
             name="amount"
-            type="number"
-            step="1"
-            min="10000"
+            type="text"
+            inputMode="numeric"
+            dir="ltr"
             required
-            placeholder={t("amountToman")}
+            value={tomanDigits ? formatIrr(tomanDigits, locale) : ""}
+            onChange={(e) => setTomanDigits(normalizeDigits(e.target.value))}
+            placeholder={formatIrr(10000, locale)}
           />
           <FormSubmit loading={loading}>{t("payWithZarinpal")}</FormSubmit>
         </form>

@@ -34,10 +34,7 @@ export default async function DashboardPage({ params }: Props) {
       </p>
       <div className="mt-8 grid sm:grid-cols-2 gap-4">
         {me.wallets.map((w) => (
-          <div
-            key={w.id || w.currency}
-            className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6"
-          >
+          <div key={w.id || w.currency} className="panel-stat-card">
             <p className="text-sm text-[var(--muted)]">
               {t("balance", { currency: w.currency })}
             </p>

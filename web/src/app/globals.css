@@ -4,6 +4,7 @@
 
 @import "@takvpn/shared/styles/themes/user.css";
 @import "@takvpn/shared/styles/theme-base.css";
+@import "@takvpn/shared/styles/panel-layout.css";
 @import "@takvpn/shared/styles/panel-form.css";
 
 @font-face {

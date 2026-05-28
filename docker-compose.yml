@@ -12,10 +12,12 @@ services:
       - "${WEB_PORT:-3000}:3000"
     environment:
       NODE_ENV: production
-      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://api:8080}
+      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://takvpn-api:8080}
     networks:
       - default
       - backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
 
 networks:

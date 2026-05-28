@@ -1,0 +1,25 @@
+/* Panel shell and section layout — uses theme spacing tokens */
+
+.panel-shell__content {
+  width: 100%;
+  min-width: 0;
+}
+
+.panel-section {
+  padding: var(--panel-padding);
+}
+
+.panel-stat-card {
+  padding: var(--card-padding);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.panel-stat-card > :first-child {
+  margin-block-start: 0;
+}
+
+.panel-stat-card > :last-child {
+  margin-block-end: 0;
+}

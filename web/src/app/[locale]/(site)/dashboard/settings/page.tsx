@@ -195,7 +195,7 @@ export default function AccountSettingsPage() {
         description={t("securitySectionDesc")}
       >
         <h3 className="font-medium text-sm mb-3">{t("changePasswordTitle")}</h3>
-        <form onSubmit={onPasswordSubmit} className="admin-form max-w-md space-y-3" dir="ltr">
+        <form onSubmit={onPasswordSubmit} className="admin-form admin-form--ltr-inputs space-y-3">
           <FormField
             label={t("currentPassword")}
             name="current"

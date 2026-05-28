@@ -22,7 +22,7 @@ export function PanelSection({
 
   return (
     <section
-      className={`rounded-xl border bg-[var(--card)] p-5 sm:p-6 ${borderClass} ${className}`.trim()}
+      className={`panel-section rounded-xl border bg-[var(--card)] ${borderClass} ${className}`.trim()}
     >
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>

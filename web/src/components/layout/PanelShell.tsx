@@ -27,7 +27,7 @@ export function PanelShell({
           <div className="sticky top-8">{sidebar}</div>
         </aside>
 
-        <div className="flex-1 min-w-0 w-full">
+        <div className="panel-shell__content flex-1 min-w-0 w-full">
           <div className="md:hidden mb-4">
             <button
               type="button"

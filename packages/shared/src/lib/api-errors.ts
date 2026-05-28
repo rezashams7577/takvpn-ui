@@ -16,6 +16,8 @@ const ERROR_KEY_BY_CODE: Record<string, string> = {
   "order failed": "orderFailed",
   "invalid credentials": "invalidCredentials",
   "email already registered": "emailTaken",
+  "invalid amount": "zarinpalMinAmount",
+  "zarinpal not configured": "zarinpalNotConfigured",
 };
 
 export function isApiError(err: unknown): err is ApiError {

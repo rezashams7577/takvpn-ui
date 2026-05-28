@@ -294,7 +294,7 @@ export async function listUsdtDeposits() {
 
 export type ZarinpalDepositStart = {
   payment_id: number;
-  payment_url: string;
+  redirect_url: string;
 };
 
 export async function createZarinpalDeposit(amount: number) {
