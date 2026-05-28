@@ -1,0 +1,33 @@
+# Dev: hot reload. Usage: docker compose -f docker-compose.dev.yml up -d
+services:
+  web:
+    image: node:20-alpine
+    container_name: takvpn-ui-web
+    working_dir: /app/web
+    command:
+      [
+        "sh",
+        "-c",
+        "npm install --prefix /app/packages/shared && npm install && npm run dev -- --hostname 0.0.0.0 -p 3000",
+      ]
+    volumes:
+      - .:/app
+      - web-node-modules:/app/web/node_modules
+      - web-next-cache:/app/web/.next
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: development
+      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://host.docker.internal:8080}
+      NEXT_PUBLIC_USER_APP_URL: ${NEXT_PUBLIC_USER_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_ADMIN_APP_URL: ${NEXT_PUBLIC_ADMIN_APP_URL:-http://localhost:3001}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+volumes:
+  web-node-modules:
+  web-next-cache:

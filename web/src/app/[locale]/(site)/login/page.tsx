@@ -5,8 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { FormField, FormMessage, FormSubmit } from "@/components/forms";
+import { AuthClosedNotice } from "@/components/AuthClosedNotice";
 import { tryRefreshSession } from "@takvpn/shared/lib/auth-session";
 import { login } from "@/lib/api";
+import { AUTH_LOGIN_ENABLED } from "@/lib/auth-access";
 import { isStaffRole } from "@/lib/admin-api";
 import { adminAppUrl, isAdminNextUrl } from "@/lib/app-urls";
 
@@ -26,10 +28,14 @@ function LoginForm() {
   const t = useTranslations("auth");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionChecked, setSessionChecked] = useState(false);
 
   useEffect(() => {
     tryRefreshSession().then((ok) => {
-      if (!ok) return;
+      if (!ok) {
+        setSessionChecked(true);
+        return;
+      }
       const next = search.get("next");
       if (next && isAdminNextUrl(next)) {
         const path = next.startsWith("http") ? new URL(next).pathname : next;
@@ -40,6 +46,14 @@ function LoginForm() {
       router.refresh();
     });
   }, [router, search, locale]);
+
+  if (!sessionChecked) {
+    return <div className="max-w-md mx-auto px-4 py-16">{t("loading")}</div>;
+  }
+
+  if (!AUTH_LOGIN_ENABLED) {
+    return <AuthClosedNotice />;
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -65,6 +65,9 @@
     "trafficGb": "{gb} GB traffic",
     "fallbackDescription": "{days} days access",
     "buyPlan": "Buy plan",
+    "buyUnavailable": "Coming soon",
+    "sellSoonTitle": "Sales opening soon",
+    "sellSoonMessage": "Plan purchases are temporarily unavailable. Sales will open soon — check back shortly.",
     "toman": "Toman",
     "planColumn": "Plan",
     "duration": "Duration",
@@ -144,7 +147,10 @@
     "resetPassword": "Reset password",
     "passwordResetSuccess": "Your password has been reset. You can sign in now.",
     "backToSignIn": "Back to sign in",
-    "invalidResetToken": "This reset link is invalid or has expired."
+    "invalidResetToken": "This reset link is invalid or has expired.",
+    "authSoonTitle": "Sign-in opening soon",
+    "authSoonMessage": "Account sign-in and registration are temporarily unavailable. They will open soon — check back shortly.",
+    "backToHome": "Back to home"
   },
   "account": {
     "title": "Account",

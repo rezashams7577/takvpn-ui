@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { fetchPlans } from "@/lib/api";
 import { PlanTable } from "@/components/PlanTable";
+import { PlansSellGate } from "@/components/PlansSellGate";
 import { localeAlternates } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -43,7 +44,9 @@ export default async function PlansPage({ params }: Props) {
         ) : plans.length === 0 ? (
           <p className="text-[var(--muted)]">{t("empty")}</p>
         ) : (
-          <PlanTable plans={plans} locale={locale} />
+          <PlansSellGate>
+            <PlanTable plans={plans} locale={locale} />
+          </PlansSellGate>
         )}
       </div>
     </div>

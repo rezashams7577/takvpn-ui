@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { brandName } from "@/components/BrandLogo";
 import { fetchPlans } from "@/lib/api";
 import { PlanTable } from "@/components/PlanTable";
+import { PlansSellGate } from "@/components/PlansSellGate";
 import { localeAlternates } from "@/lib/seo";
 import { HOME_FEATURE_KEYS } from "@/lib/faq-keys";
 
@@ -87,7 +88,9 @@ export default async function HomePage({ params }: Props) {
         ) : plans.length === 0 ? (
           <p className="text-center text-[var(--muted)]">{t("plansEmpty")}</p>
         ) : (
-          <PlanTable plans={plans} locale={locale} />
+          <PlansSellGate>
+            <PlanTable plans={plans} locale={locale} />
+          </PlansSellGate>
         )}
       </section>
 

@@ -4,12 +4,21 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        API_INTERNAL_URL: ${API_INTERNAL_URL:-http://host.docker.internal:8080}
+        API_INTERNAL_URL: ${API_INTERNAL_URL:-http://api:8080}
         NEXT_PUBLIC_USER_APP_URL: ${NEXT_PUBLIC_USER_APP_URL:-http://localhost:3000}
         NEXT_PUBLIC_ADMIN_APP_URL: ${NEXT_PUBLIC_ADMIN_APP_URL:-http://localhost:3001}
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
     ports:
       - "${WEB_PORT:-3000}:3000"
     environment:
-      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://host.docker.internal:8080}
+      NODE_ENV: production
+      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://api:8080}
+    networks:
+      - default
+      - backend
     restart: unless-stopped
+
+networks:
+  backend:
+    external: true
+    name: takvpn-backend_default

@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { FormField, FormMessage, FormSubmit } from "@/components/forms";
+import { AuthClosedNotice } from "@/components/AuthClosedNotice";
 import { register } from "@/lib/api";
+import { AUTH_REGISTER_ENABLED } from "@/lib/auth-access";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,6 +14,10 @@ export default function RegisterPage() {
   const t = useTranslations("auth");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (!AUTH_REGISTER_ENABLED) {
+    return <AuthClosedNotice />;
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

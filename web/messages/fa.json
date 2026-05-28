@@ -65,6 +65,9 @@
     "trafficGb": "{gb} گیگابایت ترافیک",
     "fallbackDescription": "{days} روز دسترسی",
     "buyPlan": "خرید پلن",
+    "buyUnavailable": "به‌زودی",
+    "sellSoonTitle": "فروش به‌زودی آغاز می‌شود",
+    "sellSoonMessage": "خرید پلن فعلاً غیرفعال است. فروش به‌زودی باز می‌شود — لطفاً کمی بعد دوباره سر بزنید.",
     "toman": "تومان",
     "planColumn": "پلن",
     "duration": "مدت",
@@ -144,7 +147,10 @@
     "resetPassword": "تنظیم رمز جدید",
     "passwordResetSuccess": "رمز عبور با موفقیت تغییر کرد. اکنون می‌توانید وارد شوید.",
     "backToSignIn": "بازگشت به ورود",
-    "invalidResetToken": "این لینک بازیابی نامعتبر یا منقضی شده است."
+    "invalidResetToken": "این لینک بازیابی نامعتبر یا منقضی شده است.",
+    "authSoonTitle": "ورود و ثبت‌نام به‌زودی",
+    "authSoonMessage": "ورود و ساخت حساب فعلاً غیرفعال است. به‌زودی باز می‌شود — لطفاً کمی بعد دوباره سر بزنید.",
+    "backToHome": "بازگشت به صفحه اصلی"
   },
   "account": {
     "title": "حساب من",

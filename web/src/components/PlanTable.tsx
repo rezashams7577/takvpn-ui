@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { formatIrr, formatUsdt } from "@/lib/format";
 import { formatTrafficGb } from "@/lib/plan-format";
+import { PLANS_SELL_ENABLED } from "@/lib/plans-sell";
 import type { Plan } from "@/lib/api";
 
 export async function PlanTable({
@@ -50,12 +51,21 @@ export async function PlanTable({
                 {formatIrr(p.price_irr, locale)} {t("toman")}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                <Link
-                  href="/dashboard/plans"
-                  className="inline-block rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium hover:bg-brand-700"
-                >
-                  {t("buyPlan")}
-                </Link>
+                {PLANS_SELL_ENABLED ? (
+                  <Link
+                    href="/dashboard/plans"
+                    className="inline-block rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium hover:bg-brand-700"
+                  >
+                    {t("buyPlan")}
+                  </Link>
+                ) : (
+                  <span
+                    className="inline-block rounded-lg bg-[var(--border)] text-[var(--muted)] px-4 py-2 text-sm font-medium cursor-not-allowed"
+                    aria-disabled
+                  >
+                    {t("buyUnavailable")}
+                  </span>
+                )}
               </td>
             </tr>
           ))}

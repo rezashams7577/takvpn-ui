@@ -106,7 +106,8 @@ export default function SupportListPage() {
         <FormField name="subject" label={t("subject")} required />
         <FormField name="body" label={t("message")} multiline />
         <FormFile name="attachment" label={t("attachment")} accept="image/*,.pdf" />
-        <FormMessage message={formMsg} error={formErr} />
+        {formMsg && <FormMessage variant="success">{formMsg}</FormMessage>}
+        {formErr && <FormMessage variant="error">{formErr}</FormMessage>}
         <FormSubmit loading={submitting}>
           {submitting ? t("submitting") : t("submit")}
         </FormSubmit>

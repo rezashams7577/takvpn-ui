@@ -208,9 +208,9 @@ export default function SupportThreadPage() {
       <form onSubmit={onReply} className="admin-form max-w-xl space-y-3">
         <FormField name="body" label={t("message")} multiline />
         <FormFile name="attachment" label={t("attachment")} accept="image/*,.pdf" />
-        <FormMessage error={err} />
-        <FormSubmit loading={submitting} loadingLabel={t("submitting")}>
-          {ticket.status === "closed" ? t("reply") : t("reply")}
+        {err && <FormMessage variant="error">{err}</FormMessage>}
+        <FormSubmit loading={submitting}>
+          {submitting ? t("submitting") : t("reply")}
         </FormSubmit>
       </form>
     </div>
