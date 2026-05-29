@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   formatIrr,
   formatUsdt,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/format";
 import { FormField, FormSelect, FormSubmit } from "@/components/forms";
 import { PanelSection } from "@/components/layout";
+import { Modal, type ModalVariant } from "@/components/Modal";
 import {
   createUsdtDeposit,
   createZarinpalDeposit,
@@ -23,6 +24,13 @@ import {
 } from "@/lib/api";
 import { toast } from "@/components/toast";
 
+type ZarinpalModalState = {
+  open: boolean;
+  variant: ModalVariant;
+  title: string;
+  message: string;
+};
+
 function explorerTxUrl(network: string, txHash: string) {
   if (network === "trc20") {
     return `https://tronscan.org/#/transaction/${txHash}`;
@@ -32,13 +40,26 @@ function explorerTxUrl(network: string, txHash: string) {
 
 export default function WalletPage() {
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("dashboard");
   const [me, setMe] = useState<Me | null>(null);
   const [activeDeposit, setActiveDeposit] = useState<UsdtDeposit | null>(null);
   const [loading, setLoading] = useState(false);
   const [tomanDigits, setTomanDigits] = useState("");
-  const zarinpalToastShown = useRef(false);
+  const [zarinpalModal, setZarinpalModal] = useState<ZarinpalModalState>({
+    open: false,
+    variant: "success",
+    title: "",
+    message: "",
+  });
+  const zarinpalModalShown = useRef(false);
+
+  const closeZarinpalModal = useCallback(() => {
+    setZarinpalModal((prev) => ({ ...prev, open: false }));
+    router.replace(pathname, { scroll: false });
+  }, [pathname, router]);
 
   const refreshDeposit = useCallback(async (id: number) => {
     try {
@@ -61,16 +82,43 @@ export default function WalletPage() {
 
   useEffect(() => {
     const outcome = searchParams.get("zarinpal");
-    if (!outcome || zarinpalToastShown.current) return;
-    zarinpalToastShown.current = true;
-    if (outcome === "success") {
-      toast.success(t("zarinpalDepositSuccess"), { duration: 5000 });
-      fetchMe().then(setMe).catch(() => {});
-    } else if (outcome === "cancelled") {
-      toast.error(t("zarinpalDepositCancelled"));
-    } else {
-      toast.error(t("zarinpalDepositFailed"));
+    if (!outcome || zarinpalModalShown.current) return;
+    zarinpalModalShown.current = true;
+
+    async function showZarinpalModal() {
+      if (outcome === "success") {
+        try {
+          const updated = await fetchMe();
+          setMe(updated);
+        } catch {
+          // Still show success modal; balance may refresh on next load.
+        }
+        setZarinpalModal({
+          open: true,
+          variant: "success",
+          title: t("zarinpalModalSuccessTitle"),
+          message: t("zarinpalDepositSuccess"),
+        });
+        return;
+      }
+      if (outcome === "cancelled") {
+        setZarinpalModal({
+          open: true,
+          variant: "warning",
+          title: t("zarinpalModalCancelledTitle"),
+          message: t("zarinpalDepositCancelled"),
+        });
+        return;
+      }
+      setZarinpalModal({
+        open: true,
+        variant: "error",
+        title: t("zarinpalModalFailedTitle"),
+        message: t("zarinpalDepositFailed"),
+      });
     }
+
+    void showZarinpalModal();
   }, [searchParams, t]);
 
   useEffect(() => {
@@ -148,6 +196,16 @@ export default function WalletPage() {
 
   return (
     <div>
+      <Modal
+        open={zarinpalModal.open}
+        title={zarinpalModal.title}
+        variant={zarinpalModal.variant}
+        closeLabel={t("zarinpalModalClose")}
+        onClose={closeZarinpalModal}
+      >
+        {zarinpalModal.message}
+      </Modal>
+
       <h1 className="text-2xl font-bold">{t("walletTitle")}</h1>
       {me && (
         <div className="mt-4 grid sm:grid-cols-2 gap-4">

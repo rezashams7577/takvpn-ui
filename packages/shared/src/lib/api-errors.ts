@@ -18,6 +18,7 @@ const ERROR_KEY_BY_CODE: Record<string, string> = {
   "email already registered": "emailTaken",
   "invalid amount": "zarinpalMinAmount",
   "zarinpal not configured": "zarinpalNotConfigured",
+  "fardahost not configured": "zarinpalNotConfigured",
 };
 
 export function isApiError(err: unknown): err is ApiError {
