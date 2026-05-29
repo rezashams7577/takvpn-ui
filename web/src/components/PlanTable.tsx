@@ -3,16 +3,20 @@ import { Link } from "@/i18n/navigation";
 import { formatIrr, formatUsdt } from "@/lib/format";
 import { formatTrafficGb } from "@/lib/plan-format";
 import { PLANS_SELL_ENABLED } from "@/lib/plans-sell";
-import type { Plan } from "@/lib/api";
+import type { PaymentMethods, Plan } from "@/lib/api";
 
 export async function PlanTable({
   plans,
   locale,
+  paymentMethods,
 }: {
   plans: Plan[];
   locale: string;
+  paymentMethods: PaymentMethods;
 }) {
   const t = await getTranslations("plans");
+  const showUsdt = paymentMethods.usdt_enabled;
+  const showToman = paymentMethods.toman_enabled;
 
   return (
     <div className="overflow-x-auto rounded-xl border border-[var(--border)] max-h-[32rem] overflow-y-auto">
@@ -23,8 +27,12 @@ export async function PlanTable({
             <th className="px-4 py-3 font-semibold">{t("traffic")}</th>
             <th className="px-4 py-3 font-semibold">{t("duration")}</th>
             <th className="px-4 py-3 font-semibold">{t("devices")}</th>
-            <th className="px-4 py-3 font-semibold">{t("priceUsdt")}</th>
-            <th className="px-4 py-3 font-semibold">{t("priceToman")}</th>
+            {showUsdt && (
+              <th className="px-4 py-3 font-semibold">{t("priceUsdt")}</th>
+            )}
+            {showToman && (
+              <th className="px-4 py-3 font-semibold">{t("priceToman")}</th>
+            )}
             <th className="px-4 py-3 font-semibold" />
           </tr>
         </thead>
@@ -36,7 +44,9 @@ export async function PlanTable({
             >
               <td className="px-4 py-3 font-medium whitespace-nowrap">{p.name}</td>
               <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
-                {p.traffic_gb ? formatTrafficGb(p.traffic_gb, locale) : "—"}
+                {p.traffic_gb
+                  ? formatTrafficGb(p.traffic_gb, locale)
+                  : t("trafficUnlimited")}
               </td>
               <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
                 {p.duration_days != null
@@ -46,12 +56,18 @@ export async function PlanTable({
               <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
                 {t("devicesUnlimited")}
               </td>
-              <td className="px-4 py-3 font-semibold text-brand-600 whitespace-nowrap">
-                {formatUsdt(p.price_usdt)} USDT
-              </td>
-              <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
-                {formatIrr(p.price_irr, locale)} {t("toman")}
-              </td>
+              {showUsdt && (
+                <td className="px-4 py-3 font-semibold text-brand-600 whitespace-nowrap">
+                  {p.price_usdt != null ? `${formatUsdt(p.price_usdt)} USDT` : "—"}
+                </td>
+              )}
+              {showToman && (
+                <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
+                  {p.price_irr != null
+                    ? `${formatIrr(p.price_irr, locale)} ${t("toman")}`
+                    : "—"}
+                </td>
+              )}
               <td className="px-4 py-3 whitespace-nowrap">
                 {PLANS_SELL_ENABLED ? (
                   <Link

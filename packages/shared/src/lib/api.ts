@@ -18,14 +18,14 @@ export type Plan = {
   meta_description?: string;
   duration_days?: number | null;
   traffic_gb?: string;
-  price_usdt: string;
-  price_irr: string;
+  price_usdt?: string;
+  price_irr?: string;
   is_active: boolean;
 };
 
-export type ExchangeRate = {
-  usdt_irr: string;
-  effective_at: string;
+export type PaymentMethods = {
+  usdt_enabled: boolean;
+  toman_enabled: boolean;
 };
 
 export type Wallet = {
@@ -179,8 +179,8 @@ export const fetchPlans = (locale = "fa") =>
 export const fetchPlan = (slug: string, locale = "fa") =>
   api<Plan>(`/api/v1/plans/${slug}?${localeQuery(locale)}`);
 
-export const fetchExchangeRate = () =>
-  api<ExchangeRate>("/api/v1/exchange-rate");
+export const fetchPaymentMethods = () =>
+  api<PaymentMethods>("/api/v1/payment-methods");
 
 export const fetchMe = async () => {
   const me = await api<Omit<Me, "wallets"> & { wallets?: WalletRaw[] | null }>(

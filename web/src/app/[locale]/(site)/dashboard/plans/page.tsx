@@ -5,9 +5,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import {
   createOrder,
+  fetchPaymentMethods,
   fetchPlans,
   isInsufficientBalance,
   mapApiError,
+  type PaymentMethods,
   type Plan,
 } from "@/lib/api";
 import { formatIrr, formatUsdt } from "@/lib/format";
@@ -22,15 +24,34 @@ export default function DashboardPlansPage() {
   const t = useTranslations("dashboard");
   const tPlans = useTranslations("plans");
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [payment, setPayment] = useState<PaymentMethods | null>(null);
   const [currency, setCurrency] = useState<"USDT" | "IRR">("USDT");
   const [loading, setLoading] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchPlans(locale).then(setPlans).catch(() => setPlans([]));
+    Promise.all([fetchPlans(locale), fetchPaymentMethods()])
+      .then(([p, pm]) => {
+        setPlans(p);
+        setPayment(pm);
+        if (pm.usdt_enabled && !pm.toman_enabled) {
+          setCurrency("USDT");
+        } else if (!pm.usdt_enabled && pm.toman_enabled) {
+          setCurrency("IRR");
+        }
+      })
+      .catch(() => {
+        setPlans([]);
+        setPayment(null);
+      });
   }, [locale]);
 
+  const showUsdt = payment?.usdt_enabled !== false;
+  const showToman = payment?.toman_enabled !== false;
+  const showCurrencyToggle = showUsdt && showToman;
+  const paymentsAvailable = showUsdt || showToman;
+
   async function buy(planId: number) {
-    if (!PLANS_SELL_ENABLED) return;
+    if (!PLANS_SELL_ENABLED || !paymentsAvailable) return;
     setLoading(planId);
     try {
       const res = await createOrder(planId, currency);
@@ -55,6 +76,16 @@ export default function DashboardPlansPage() {
     } finally {
       setLoading(null);
     }
+  }
+
+  function formatPrice(p: Plan) {
+    if (currency === "USDT" && p.price_usdt != null) {
+      return `${formatUsdt(p.price_usdt)} USDT`;
+    }
+    if (currency === "IRR" && p.price_irr != null) {
+      return `${formatIrr(p.price_irr, locale)} ${tPlans("toman")}`;
+    }
+    return "—";
   }
 
   const planTable = (
@@ -82,19 +113,19 @@ export default function DashboardPlansPage() {
                   : tPlans("durationUnlimited")}
               </td>
               <td className="px-4 py-3 text-[var(--muted)]">
-                {p.traffic_gb ? formatTrafficGb(p.traffic_gb, locale) : "—"}
+                {p.traffic_gb
+                  ? formatTrafficGb(p.traffic_gb, locale)
+                  : tPlans("trafficUnlimited")}
               </td>
               <td className="px-4 py-3 text-[var(--muted)]">{tPlans("devicesUnlimited")}</td>
               <td className="px-4 py-3 font-semibold text-brand-600 whitespace-nowrap">
-                {currency === "USDT"
-                  ? `${formatUsdt(p.price_usdt)} USDT`
-                  : `${formatIrr(p.price_irr, locale)} ${tPlans("toman")}`}
+                {formatPrice(p)}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
                 <button
                   type="button"
                   onClick={() => buy(p.id)}
-                  disabled={!PLANS_SELL_ENABLED || loading === p.id}
+                  disabled={!PLANS_SELL_ENABLED || !paymentsAvailable || loading === p.id}
                   className="rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {!PLANS_SELL_ENABLED
@@ -114,6 +145,11 @@ export default function DashboardPlansPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold">{t("buyPlanTitle")}</h1>
+      {!paymentsAvailable && payment !== null && (
+        <p className="mt-4 text-sm text-amber-700 dark:text-amber-300" role="alert">
+          {t("paymentsDisabled")}
+        </p>
+      )}
       {!PLANS_SELL_ENABLED && (
         <div
           className="mt-4 rounded-xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950/50 dark:text-amber-100"
@@ -123,24 +159,26 @@ export default function DashboardPlansPage() {
           <p className="mt-1 text-amber-800 dark:text-amber-200">{tPlans("sellSoonMessage")}</p>
         </div>
       )}
-      <div className={`mt-4 flex gap-2 ${!PLANS_SELL_ENABLED ? "opacity-50 pointer-events-none" : ""}`}>
-        <button
-          type="button"
-          onClick={() => setCurrency("USDT")}
-          disabled={!PLANS_SELL_ENABLED}
-          className={`px-3 py-1 rounded-lg text-sm ${currency === "USDT" ? "bg-brand-600 text-white" : "border"}`}
-        >
-          {t("payUsdt")}
-        </button>
-        <button
-          type="button"
-          onClick={() => setCurrency("IRR")}
-          disabled={!PLANS_SELL_ENABLED}
-          className={`px-3 py-1 rounded-lg text-sm ${currency === "IRR" ? "bg-brand-600 text-white" : "border"}`}
-        >
-          {t("payToman")}
-        </button>
-      </div>
+      {showCurrencyToggle && (
+        <div className={`mt-4 flex gap-2 ${!PLANS_SELL_ENABLED ? "opacity-50 pointer-events-none" : ""}`}>
+          <button
+            type="button"
+            onClick={() => setCurrency("USDT")}
+            disabled={!PLANS_SELL_ENABLED}
+            className={`px-3 py-1 rounded-lg text-sm ${currency === "USDT" ? "bg-brand-600 text-white" : "border"}`}
+          >
+            {t("payUsdt")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrency("IRR")}
+            disabled={!PLANS_SELL_ENABLED}
+            className={`px-3 py-1 rounded-lg text-sm ${currency === "IRR" ? "bg-brand-600 text-white" : "border"}`}
+          >
+            {t("payToman")}
+          </button>
+        </div>
+      )}
       <div className="mt-8">
         {PLANS_SELL_ENABLED ? planTable : <PlansSellGate>{planTable}</PlansSellGate>}
       </div>

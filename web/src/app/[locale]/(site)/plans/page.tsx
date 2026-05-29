@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { fetchPlans } from "@/lib/api";
+import { fetchPaymentMethods, fetchPlans } from "@/lib/api";
 import { PlanTable } from "@/components/PlanTable";
 import { PlansSellGate } from "@/components/PlansSellGate";
 import { localeAlternates } from "@/lib/seo";
@@ -25,9 +25,13 @@ export default async function PlansPage({ params }: Props) {
   const t = await getTranslations("plans");
 
   let plans: Awaited<ReturnType<typeof fetchPlans>> = [];
+  let paymentMethods = { usdt_enabled: true, toman_enabled: true };
   let failed = false;
   try {
-    plans = await fetchPlans(locale);
+    [plans, paymentMethods] = await Promise.all([
+      fetchPlans(locale),
+      fetchPaymentMethods(),
+    ]);
   } catch {
     failed = true;
     plans = [];
@@ -45,7 +49,7 @@ export default async function PlansPage({ params }: Props) {
           <p className="text-[var(--muted)]">{t("empty")}</p>
         ) : (
           <PlansSellGate>
-            <PlanTable plans={plans} locale={locale} />
+            <PlanTable plans={plans} locale={locale} paymentMethods={paymentMethods} />
           </PlansSellGate>
         )}
       </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { brandName } from "@/components/BrandLogo";
-import { fetchPlans } from "@/lib/api";
+import { fetchPaymentMethods, fetchPlans } from "@/lib/api";
 import { PlanTable } from "@/components/PlanTable";
 import { PlansSellGate } from "@/components/PlansSellGate";
 import { localeAlternates } from "@/lib/seo";
@@ -27,9 +27,13 @@ export default async function HomePage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("home");
   let plans: Awaited<ReturnType<typeof fetchPlans>> = [];
+  let paymentMethods = { usdt_enabled: true, toman_enabled: true };
   let plansFailed = false;
   try {
-    plans = await fetchPlans(locale);
+    [plans, paymentMethods] = await Promise.all([
+      fetchPlans(locale),
+      fetchPaymentMethods(),
+    ]);
   } catch {
     plansFailed = true;
     plans = [];
@@ -89,7 +93,7 @@ export default async function HomePage({ params }: Props) {
           <p className="text-center text-[var(--muted)]">{t("plansEmpty")}</p>
         ) : (
           <PlansSellGate>
-            <PlanTable plans={plans} locale={locale} />
+            <PlanTable plans={plans} locale={locale} paymentMethods={paymentMethods} />
           </PlansSellGate>
         )}
       </section>

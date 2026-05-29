@@ -17,9 +17,11 @@ import {
   createUsdtDeposit,
   createZarinpalDeposit,
   fetchMe,
+  fetchPaymentMethods,
   getUsdtDeposit,
   mapApiError,
   type Me,
+  type PaymentMethods,
   type UsdtDeposit,
 } from "@/lib/api";
 import { toast } from "@/components/toast";
@@ -45,6 +47,7 @@ export default function WalletPage() {
   const searchParams = useSearchParams();
   const t = useTranslations("dashboard");
   const [me, setMe] = useState<Me | null>(null);
+  const [payment, setPayment] = useState<PaymentMethods | null>(null);
   const [activeDeposit, setActiveDeposit] = useState<UsdtDeposit | null>(null);
   const [loading, setLoading] = useState(false);
   const [tomanDigits, setTomanDigits] = useState("");
@@ -77,7 +80,15 @@ export default function WalletPage() {
   }, [t]);
 
   useEffect(() => {
-    fetchMe().then(setMe).catch(() => setMe(null));
+    Promise.all([fetchMe(), fetchPaymentMethods()])
+      .then(([m, pm]) => {
+        setMe(m);
+        setPayment(pm);
+      })
+      .catch(() => {
+        setMe(null);
+        setPayment(null);
+      });
   }, []);
 
   useEffect(() => {
@@ -181,11 +192,16 @@ export default function WalletPage() {
     }
   }
 
+  const showUsdt = payment?.usdt_enabled !== false;
+  const showToman = payment?.toman_enabled !== false;
+  const paymentsAvailable = showUsdt || showToman;
+
   const showUsdtForm =
-    !activeDeposit ||
-    activeDeposit.status === "paid" ||
-    activeDeposit.status === "expired" ||
-    activeDeposit.status === "cancelled";
+    showUsdt &&
+    (!activeDeposit ||
+      activeDeposit.status === "paid" ||
+      activeDeposit.status === "expired" ||
+      activeDeposit.status === "cancelled");
 
   const networkLabel =
     activeDeposit?.network === "erc20"
@@ -209,17 +225,29 @@ export default function WalletPage() {
       <h1 className="text-2xl font-bold">{t("walletTitle")}</h1>
       {me && (
         <div className="mt-4 grid sm:grid-cols-2 gap-4">
-          {me.wallets.map((w) => (
-            <div key={w.id || w.currency} className="panel-stat-card">
-              <span className="text-sm text-[var(--muted)]">{w.currency}</span>
-              <p className="text-xl font-bold">
-                {formatWalletBalance(w.balance, w.currency, locale)}
-              </p>
-            </div>
-          ))}
+          {me.wallets
+            .filter(
+              (w) =>
+                (w.currency === "USDT" && showUsdt) || (w.currency === "IRR" && showToman)
+            )
+            .map((w) => (
+              <div key={w.id || w.currency} className="panel-stat-card">
+                <span className="text-sm text-[var(--muted)]">{w.currency}</span>
+                <p className="text-xl font-bold">
+                  {formatWalletBalance(w.balance, w.currency, locale)}
+                </p>
+              </div>
+            ))}
         </div>
       )}
 
+      {payment !== null && !paymentsAvailable && (
+        <p className="mt-6 text-sm text-amber-700 dark:text-amber-300" role="alert">
+          {t("paymentsDisabled")}
+        </p>
+      )}
+
+      {showUsdt && (
       <PanelSection
         title={t("topUpUsdt")}
         description={t("usdtDepositHint")}
@@ -323,7 +351,9 @@ export default function WalletPage() {
           )
         )}
       </PanelSection>
+      )}
 
+      {showToman && (
       <PanelSection
         title={t("tomanDeposit")}
         description={t("zarinpalDepositHint")}
@@ -344,6 +374,7 @@ export default function WalletPage() {
           <FormSubmit loading={loading}>{t("payWithZarinpal")}</FormSubmit>
         </form>
       </PanelSection>
+      )}
     </div>
   );
 }
