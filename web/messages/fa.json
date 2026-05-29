@@ -18,7 +18,9 @@
   "footer": {
     "copyright": "© {year} TakVPN",
     "privacy": "حریم خصوصی",
-    "terms": "قوانین"
+    "terms": "قوانین",
+    "telegramChannel": "کانال تلگرام",
+    "telegramSupport": "پشتیبانی تلگرام"
   },
   "home": {
     "metaTitle": "takvpn-خرید امن",
