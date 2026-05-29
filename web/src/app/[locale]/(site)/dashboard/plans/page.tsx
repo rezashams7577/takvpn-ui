@@ -77,7 +77,9 @@ export default function DashboardPlansPage() {
             <tr key={p.id} className="hover:bg-brand-50/50 dark:hover:bg-brand-900/10">
               <td className="px-4 py-3 font-medium">{p.name}</td>
               <td className="px-4 py-3 text-[var(--muted)]">
-                {tPlans("durationDays", { days: p.duration_days })}
+                {p.duration_days != null
+                  ? tPlans("durationDays", { days: p.duration_days })
+                  : tPlans("durationUnlimited")}
               </td>
               <td className="px-4 py-3 text-[var(--muted)]">
                 {p.traffic_gb ? formatTrafficGb(p.traffic_gb, locale) : "—"}

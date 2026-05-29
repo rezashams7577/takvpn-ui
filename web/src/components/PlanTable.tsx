@@ -39,7 +39,9 @@ export async function PlanTable({
                 {p.traffic_gb ? formatTrafficGb(p.traffic_gb, locale) : "—"}
               </td>
               <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
-                {t("durationDays", { days: p.duration_days })}
+                {p.duration_days != null
+                  ? t("durationDays", { days: p.duration_days })
+                  : t("durationUnlimited")}
               </td>
               <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
                 {t("devicesUnlimited")}

@@ -25,7 +25,7 @@ export type AdminPlan = {
   description?: string;
   meta_title?: string;
   meta_description?: string;
-  duration_days: number;
+  duration_days: number | null;
   traffic_gb?: string;
   interface_id: number;
   price_usdt: string;

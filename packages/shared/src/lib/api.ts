@@ -16,7 +16,7 @@ export type Plan = {
   description?: string;
   meta_title?: string;
   meta_description?: string;
-  duration_days: number;
+  duration_days?: number | null;
   traffic_gb?: string;
   price_usdt: string;
   price_irr: string;

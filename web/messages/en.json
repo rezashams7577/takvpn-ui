@@ -62,6 +62,7 @@
     "empty": "No plans available right now. Please try again later.",
     "emptyError": "Could not load plans. Refresh the page or contact support.",
     "durationDays": "{days} days",
+    "durationUnlimited": "No time limit",
     "trafficGb": "{gb} GB traffic",
     "fallbackDescription": "{days} days access",
     "buyPlan": "Buy plan",
