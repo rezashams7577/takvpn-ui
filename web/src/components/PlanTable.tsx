@@ -2,17 +2,18 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { formatIrr, formatUsdt } from "@/lib/format";
 import { formatTrafficGb } from "@/lib/plan-format";
-import { PLANS_SELL_ENABLED } from "@/lib/plans-sell";
 import type { PaymentMethods, Plan } from "@/lib/api";
 
 export async function PlanTable({
   plans,
   locale,
   paymentMethods,
+  plansSellEnabled,
 }: {
   plans: Plan[];
   locale: string;
   paymentMethods: PaymentMethods;
+  plansSellEnabled: boolean;
 }) {
   const t = await getTranslations("plans");
   const showUsdt = paymentMethods.usdt_enabled;
@@ -69,7 +70,7 @@ export async function PlanTable({
                 </td>
               )}
               <td className="px-4 py-3 whitespace-nowrap">
-                {PLANS_SELL_ENABLED ? (
+                {plansSellEnabled ? (
                   <Link
                     href="/dashboard/plans"
                     className="inline-block rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium hover:bg-brand-700"

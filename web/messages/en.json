@@ -139,6 +139,8 @@
     "hasAccount": "Already have an account?",
     "loginFailed": "Login failed",
     "registerFailed": "Registration failed",
+    "registrationDisabled": "Registration is temporarily disabled.",
+    "loginDisabled": "Sign-in is temporarily disabled.",
     "loading": "Loading…",
     "forgotPassword": "Forgot password?",
     "forgotPasswordTitle": "Reset password",
@@ -221,6 +223,8 @@
     "insufficientBalance": "Insufficient wallet balance. Please top up your wallet first.",
     "planNotFound": "Plan not found.",
     "orderFailed": "Could not place the order. Please try again.",
+    "planPurchasesDisabled": "Plan purchases are temporarily disabled.",
+    "supportTicketingDisabled": "Support ticketing is temporarily disabled.",
     "invalidCredentials": "Invalid email or password.",
     "emailTaken": "This email is already registered.",
     "genericError": "Something went wrong. Please try again.",
@@ -307,7 +311,10 @@
     "rateLimited": "Too many requests. Please try again in a few minutes.",
     "unavailable": "Could not submit your ticket right now. Please try again shortly.",
     "listLoadFailed": "Could not load your tickets.",
-    "backToList": "← Back to tickets"
+    "backToList": "← Back to tickets",
+    "ticketingClosedTitle": "Support tickets unavailable",
+    "ticketingClosedMessage": "In-dashboard support is temporarily closed. Please contact us on Telegram using the button at the bottom of the page.",
+    "backToDashboard": "Back to dashboard"
   },
   "adminPanel": {
     "dashboard": "Dashboard",

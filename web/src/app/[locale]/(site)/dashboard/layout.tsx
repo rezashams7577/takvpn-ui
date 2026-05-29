@@ -5,6 +5,7 @@ import { fetchMe } from "@/lib/api";
 import { isStaffRole } from "@/lib/admin-api";
 import { PanelShell } from "@/components/layout/PanelShell";
 import { adminAppUrl } from "@/lib/app-urls";
+import { getSiteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -19,13 +20,16 @@ export default async function DashboardLayout({ children, params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("dashboard");
+  const siteConfig = await getSiteConfig();
 
   const nav = [
     { href: "/dashboard" as const, label: t("overview") },
     { href: "/dashboard/wallet" as const, label: t("wallet") },
     { href: "/dashboard/plans" as const, label: t("buyPlan") },
     { href: "/dashboard/vpn" as const, label: t("myVpns") },
-    { href: "/dashboard/support" as const, label: t("support") },
+    ...(siteConfig.ticketing_enabled
+      ? [{ href: "/dashboard/support" as const, label: t("support") }]
+      : []),
     { href: "/dashboard/settings" as const, label: t("account") },
   ];
 

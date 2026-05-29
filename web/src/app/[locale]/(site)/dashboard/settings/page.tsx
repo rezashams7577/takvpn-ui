@@ -10,6 +10,7 @@ import {
   PanelSection,
 } from "@/components/layout";
 import { isApiError } from "@takvpn/shared/lib/api-errors";
+import { useTicketingEnabled } from "@/components/SiteConfigProvider";
 import {
   changePassword,
   fetchMe,
@@ -34,6 +35,7 @@ function accountError(t: (key: string) => string, err: unknown): string {
 
 export default function AccountSettingsPage() {
   const t = useTranslations("account");
+  const ticketingEnabled = useTicketingEnabled();
   const router = useRouter();
   const locale = useLocale();
   const [me, setMe] = useState<Me | null>(null);
@@ -262,14 +264,16 @@ export default function AccountSettingsPage() {
         </div>
       </PanelSection>
 
-      <PanelSection title={t("helpSection")} description={t("helpSectionDesc")}>
-        <Link
-          href="/dashboard/support"
-          className="inline-flex rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-medium text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/30"
-        >
-          {t("contactSupport")}
-        </Link>
-      </PanelSection>
+      {ticketingEnabled && (
+        <PanelSection title={t("helpSection")} description={t("helpSectionDesc")}>
+          <Link
+            href="/dashboard/support"
+            className="inline-flex rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-medium text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-900/30"
+          >
+            {t("contactSupport")}
+          </Link>
+        </PanelSection>
+      )}
     </div>
   );
 }

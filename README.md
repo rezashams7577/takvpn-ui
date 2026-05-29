@@ -41,7 +41,9 @@ Open http://localhost:3000
 | `NEXT_PUBLIC_USER_APP_URL` | Public URL of this app (build-time) |
 | `NEXT_PUBLIC_ADMIN_APP_URL` | Admin panel URL for staff links (build-time) |
 | `NEXT_PUBLIC_APP_URL` | Canonical app URL for metadata (build-time) |
-| `NEXT_PUBLIC_PLANS_SELL_ENABLED` | Set to `true` or `1` to enable plan purchases from wallet (build-time) |
+| `NEXT_PUBLIC_TELEGRAM_*` / `NEXT_PUBLIC_SUPPORT_CONTACT` | Optional Telegram URLs and support line (build-time) |
+
+Site feature flags (plan selling, ticketing, login, register) are toggled in **takvpn-admin → Site controls** at runtime; no UI rebuild required.
 
 ## Docker (production)
 
@@ -59,8 +61,9 @@ This repo is standalone. Develop here directly, or copy changes from a legacy mo
 
 ## Deploy on a separate server
 
-1. Clone this repo on the UI server.
-2. Set `.env` with your production API URL and public URLs.
-3. `docker compose up -d --build` (or build/push image in CI).
-4. Put nginx/Caddy in front with TLS; proxy only this host to port 3000.
-5. Ensure the UI server can reach the API (`API_INTERNAL_URL`).
+1. Deploy **takvpn-backend** and run migrations (including `016_site_settings`).
+2. Deploy **takvpn-admin**; configure site flags under **Site controls** (super_admin).
+3. Clone this repo on the UI server; set `.env` with production API and public URLs.
+4. `docker compose up -d --build` (or build/push image in CI).
+5. Put nginx/Caddy in front with TLS; proxy only this host to port 3000.
+6. Ensure the UI server can reach the API (`API_INTERNAL_URL`).

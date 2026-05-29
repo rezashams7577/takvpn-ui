@@ -6,16 +6,18 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { FormField, FormMessage, FormSubmit } from "@/components/forms";
 import { AuthClosedNotice } from "@/components/AuthClosedNotice";
 import { register } from "@/lib/api";
-import { AUTH_REGISTER_ENABLED } from "@/lib/auth-access";
+import { useAuthLoginEnabled, useAuthRegisterEnabled } from "@/components/SiteConfigProvider";
 
 export default function RegisterPage() {
   const router = useRouter();
   const locale = useLocale();
+  const authRegisterEnabled = useAuthRegisterEnabled();
+  const authLoginEnabled = useAuthLoginEnabled();
   const t = useTranslations("auth");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (!AUTH_REGISTER_ENABLED) {
+  if (!authRegisterEnabled) {
     return <AuthClosedNotice />;
   }
 
@@ -58,12 +60,14 @@ export default function RegisterPage() {
           {loading ? t("registerLoading") : t("register")}
         </FormSubmit>
       </form>
-      <p className="mt-4 text-sm text-center text-[var(--muted)]">
-        {t("hasAccount")}{" "}
-        <Link href="/login" locale={locale} className="text-brand-600">
-          {t("signIn")}
-        </Link>
-      </p>
+      {authLoginEnabled && (
+        <p className="mt-4 text-sm text-center text-[var(--muted)]">
+          {t("hasAccount")}{" "}
+          <Link href="/login" locale={locale} className="text-brand-600">
+            {t("signIn")}
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

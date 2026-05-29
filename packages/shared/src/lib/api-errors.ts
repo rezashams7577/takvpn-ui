@@ -19,6 +19,10 @@ const ERROR_KEY_BY_CODE: Record<string, string> = {
   "invalid amount": "zarinpalMinAmount",
   "zarinpal not configured": "zarinpalNotConfigured",
   "fardahost not configured": "zarinpalNotConfigured",
+  "registration disabled": "registrationDisabled",
+  "login disabled": "loginDisabled",
+  "plan purchases disabled": "planPurchasesDisabled",
+  "support ticketing disabled": "supportTicketingDisabled",
 };
 
 export function isApiError(err: unknown): err is ApiError {

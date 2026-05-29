@@ -1,12 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { PLANS_SELL_ENABLED } from "@/lib/plans-sell";
+import { usePlansSellEnabled } from "@/components/SiteConfigProvider";
 
 export function PlansSellGate({ children }: { children: React.ReactNode }) {
   const t = useTranslations("plans");
+  const plansSellEnabled = usePlansSellEnabled();
 
-  if (PLANS_SELL_ENABLED) {
+  if (plansSellEnabled) {
     return <>{children}</>;
   }
 

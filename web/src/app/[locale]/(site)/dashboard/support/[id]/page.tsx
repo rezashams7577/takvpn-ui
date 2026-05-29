@@ -11,6 +11,8 @@ import {
   FormSubmit,
 } from "@/components/forms";
 import { createTicketSocket } from "@/lib/ticket-socket";
+import { TicketingClosedNotice } from "@/components/TicketingClosedNotice";
+import { useTicketingEnabled } from "@/components/SiteConfigProvider";
 import {
   closeTicket,
   getTicket,
@@ -21,6 +23,7 @@ import {
 } from "@/lib/tickets";
 
 export default function SupportThreadPage() {
+  const ticketingEnabled = useTicketingEnabled();
   const t = useTranslations("support");
   const params = useParams();
   const ticketId = Number(params.id);
@@ -45,15 +48,16 @@ export default function SupportThreadPage() {
   }, [ticketId, t]);
 
   useEffect(() => {
+    if (!ticketingEnabled) return;
     load();
-  }, [load]);
+  }, [load, ticketingEnabled]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
-    if (!ticketId) return;
+    if (!ticketingEnabled || !ticketId) return;
     const sock = createTicketSocket({
       onOpen: () => {
         setConnected(true);
@@ -81,7 +85,11 @@ export default function SupportThreadPage() {
     });
     socketRef.current = sock;
     return () => sock.close();
-  }, [ticketId]);
+  }, [ticketId, ticketingEnabled]);
+
+  if (!ticketingEnabled) {
+    return <TicketingClosedNotice />;
+  }
 
   async function onReply(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -9,6 +9,8 @@ import {
   FormMessage,
   FormSubmit,
 } from "@/components/forms";
+import { TicketingClosedNotice } from "@/components/TicketingClosedNotice";
+import { useTicketingEnabled } from "@/components/SiteConfigProvider";
 import {
   createTicket,
   listTickets,
@@ -34,6 +36,7 @@ function mapTicketError(t: ReturnType<typeof useTranslations>, err: unknown): st
 }
 
 export default function SupportListPage() {
+  const ticketingEnabled = useTicketingEnabled();
   const t = useTranslations("support");
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,8 +61,13 @@ export default function SupportListPage() {
   }, [t]);
 
   useEffect(() => {
+    if (!ticketingEnabled) return;
     load();
-  }, [load]);
+  }, [load, ticketingEnabled]);
+
+  if (!ticketingEnabled) {
+    return <TicketingClosedNotice />;
+  }
 
   async function onCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -7,8 +7,9 @@ import { PlanTable } from "@/components/PlanTable";
 import { PlansSellGate } from "@/components/PlansSellGate";
 import { localeAlternates } from "@/lib/seo";
 import { HOME_FEATURE_KEYS } from "@/lib/faq-keys";
+import { getSiteConfig } from "@/lib/site-config";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -26,6 +27,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("home");
+  const siteConfig = await getSiteConfig();
   let plans: Awaited<ReturnType<typeof fetchPlans>> = [];
   let paymentMethods = { usdt_enabled: true, toman_enabled: true };
   let plansFailed = false;
@@ -93,7 +95,12 @@ export default async function HomePage({ params }: Props) {
           <p className="text-center text-[var(--muted)]">{t("plansEmpty")}</p>
         ) : (
           <PlansSellGate>
-            <PlanTable plans={plans} locale={locale} paymentMethods={paymentMethods} />
+            <PlanTable
+              plans={plans}
+              locale={locale}
+              paymentMethods={paymentMethods}
+              plansSellEnabled={siteConfig.plans_sell_enabled}
+            />
           </PlansSellGate>
         )}
       </section>

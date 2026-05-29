@@ -14,13 +14,14 @@ import {
 } from "@/lib/api";
 import { formatIrr, formatUsdt } from "@/lib/format";
 import { formatTrafficGb } from "@/lib/plan-format";
-import { PLANS_SELL_ENABLED } from "@/lib/plans-sell";
+import { usePlansSellEnabled } from "@/components/SiteConfigProvider";
 import { PlansSellGate } from "@/components/PlansSellGate";
 import { toast } from "@/components/toast";
 
 export default function DashboardPlansPage() {
   const locale = useLocale();
   const router = useRouter();
+  const plansSellEnabled = usePlansSellEnabled();
   const t = useTranslations("dashboard");
   const tPlans = useTranslations("plans");
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -51,7 +52,7 @@ export default function DashboardPlansPage() {
   const paymentsAvailable = showUsdt || showToman;
 
   async function buy(planId: number) {
-    if (!PLANS_SELL_ENABLED || !paymentsAvailable) return;
+    if (!plansSellEnabled || !paymentsAvailable) return;
     setLoading(planId);
     try {
       const res = await createOrder(planId, currency);
@@ -127,10 +128,10 @@ export default function DashboardPlansPage() {
                 <button
                   type="button"
                   onClick={() => buy(p.id)}
-                  disabled={!PLANS_SELL_ENABLED || !paymentsAvailable || loading === p.id}
+                  disabled={!plansSellEnabled || !paymentsAvailable || loading === p.id}
                   className="rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {!PLANS_SELL_ENABLED
+                  {!plansSellEnabled
                     ? tPlans("buyUnavailable")
                     : loading === p.id
                       ? t("processing")
@@ -152,7 +153,7 @@ export default function DashboardPlansPage() {
           {t("paymentsDisabled")}
         </p>
       )}
-      {!PLANS_SELL_ENABLED && (
+      {!plansSellEnabled && (
         <div
           className="mt-4 rounded-xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950/50 dark:text-amber-100"
           role="status"
@@ -162,11 +163,11 @@ export default function DashboardPlansPage() {
         </div>
       )}
       {showCurrencyToggle && (
-        <div className={`mt-4 flex gap-2 ${!PLANS_SELL_ENABLED ? "opacity-50 pointer-events-none" : ""}`}>
+        <div className={`mt-4 flex gap-2 ${!plansSellEnabled ? "opacity-50 pointer-events-none" : ""}`}>
           <button
             type="button"
             onClick={() => setCurrency("USDT")}
-            disabled={!PLANS_SELL_ENABLED}
+            disabled={!plansSellEnabled}
             className={`px-3 py-1 rounded-lg text-sm ${currency === "USDT" ? "bg-brand-600 text-white" : "border"}`}
           >
             {t("payUsdt")}
@@ -174,7 +175,7 @@ export default function DashboardPlansPage() {
           <button
             type="button"
             onClick={() => setCurrency("IRR")}
-            disabled={!PLANS_SELL_ENABLED}
+            disabled={!plansSellEnabled}
             className={`px-3 py-1 rounded-lg text-sm ${currency === "IRR" ? "bg-brand-600 text-white" : "border"}`}
           >
             {t("payToman")}
@@ -182,7 +183,7 @@ export default function DashboardPlansPage() {
         </div>
       )}
       <div className="mt-8">
-        {PLANS_SELL_ENABLED ? planTable : <PlansSellGate>{planTable}</PlansSellGate>}
+        {plansSellEnabled ? planTable : <PlansSellGate>{planTable}</PlansSellGate>}
       </div>
     </div>
   );

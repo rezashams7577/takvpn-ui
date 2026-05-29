@@ -139,6 +139,8 @@
     "hasAccount": "قبلاً ثبت‌نام کرده‌اید؟",
     "loginFailed": "ورود ناموفق بود",
     "registerFailed": "ثبت‌نام ناموفق بود",
+    "registrationDisabled": "ثبت‌نام موقتاً غیرفعال است.",
+    "loginDisabled": "ورود موقتاً غیرفعال است.",
     "loading": "در حال بارگذاری…",
     "forgotPassword": "رمز عبور را فراموش کرده‌اید؟",
     "forgotPasswordTitle": "بازیابی رمز عبور",
@@ -221,6 +223,8 @@
     "insufficientBalance": "موجودی کیف پول کافی نیست. ابتدا کیف پول را شارژ کنید.",
     "planNotFound": "پلن یافت نشد.",
     "orderFailed": "ثبت سفارش ناموفق بود. دوباره تلاش کنید.",
+    "planPurchasesDisabled": "خرید پلن موقتاً غیرفعال است.",
+    "supportTicketingDisabled": "تیکت پشتیبانی موقتاً غیرفعال است.",
     "invalidCredentials": "ایمیل یا رمز عبور نادرست است.",
     "emailTaken": "این ایمیل قبلاً ثبت شده است.",
     "genericError": "خطایی رخ داد. دوباره تلاش کنید.",
@@ -307,7 +311,10 @@
     "rateLimited": "تعداد درخواست‌ها زیاد است. کمی بعد دوباره تلاش کنید.",
     "unavailable": "ثبت تیکت الان ممکن نیست. چند دقیقه بعد دوباره تلاش کنید.",
     "listLoadFailed": "بارگذاری تیکت‌ها ناموفق بود.",
-    "backToList": "← بازگشت به تیکت‌ها"
+    "backToList": "← بازگشت به تیکت‌ها",
+    "ticketingClosedTitle": "تیکت پشتیبانی غیرفعال است",
+    "ticketingClosedMessage": "پشتیبانی داخل پنل موقتاً بسته است. لطفاً از دکمه تلگرام پایین صفحه با ما در ارتباط باشید.",
+    "backToDashboard": "بازگشت به پنل"
   },
   "adminPanel": {
     "dashboard": "داشبورد",

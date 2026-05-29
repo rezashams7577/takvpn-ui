@@ -8,7 +8,7 @@ import { FormField, FormMessage, FormSubmit } from "@/components/forms";
 import { AuthClosedNotice } from "@/components/AuthClosedNotice";
 import { tryRefreshSession } from "@takvpn/shared/lib/auth-session";
 import { login } from "@/lib/api";
-import { AUTH_LOGIN_ENABLED } from "@/lib/auth-access";
+import { useAuthLoginEnabled, useAuthRegisterEnabled } from "@/components/SiteConfigProvider";
 import { isStaffRole } from "@/lib/admin-api";
 import { adminAppUrl, isAdminNextUrl } from "@/lib/app-urls";
 
@@ -25,6 +25,8 @@ function LoginForm() {
   const router = useRouter();
   const locale = useLocale();
   const search = useSearchParams();
+  const authLoginEnabled = useAuthLoginEnabled();
+  const authRegisterEnabled = useAuthRegisterEnabled();
   const t = useTranslations("auth");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,7 +53,7 @@ function LoginForm() {
     return <div className="max-w-md mx-auto px-4 py-16">{t("loading")}</div>;
   }
 
-  if (!AUTH_LOGIN_ENABLED) {
+  if (!authLoginEnabled) {
     return <AuthClosedNotice />;
   }
 
@@ -103,12 +105,14 @@ function LoginForm() {
           {loading ? t("signInLoading") : t("signIn")}
         </FormSubmit>
       </form>
-      <p className="mt-4 text-sm text-center text-[var(--muted)]">
-        {t("noAccount")}{" "}
-        <Link href="/register" locale={locale} className="text-brand-600">
-          {t("register")}
-        </Link>
-      </p>
+      {authRegisterEnabled && (
+        <p className="mt-4 text-sm text-center text-[var(--muted)]">
+          {t("noAccount")}{" "}
+          <Link href="/register" locale={locale} className="text-brand-600">
+            {t("register")}
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

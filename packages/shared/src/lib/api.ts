@@ -29,6 +29,16 @@ export type PaymentMethods = {
   toman_enabled: boolean;
 };
 
+export type SiteSettings = {
+  plans_sell_enabled: boolean;
+  ticketing_enabled: boolean;
+  auth_login_enabled: boolean;
+  auth_register_enabled: boolean;
+};
+
+export const fetchSiteSettings = () =>
+  api<SiteSettings>("/api/v1/site-settings");
+
 export type Wallet = {
   id: number;
   currency: string;

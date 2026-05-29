@@ -4,8 +4,9 @@ import { fetchPaymentMethods, fetchPlans } from "@/lib/api";
 import { PlanTable } from "@/components/PlanTable";
 import { PlansSellGate } from "@/components/PlansSellGate";
 import { localeAlternates } from "@/lib/seo";
+import { getSiteConfig } from "@/lib/site-config";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -27,6 +28,7 @@ export default async function PlansPage({ params }: Props) {
   let plans: Awaited<ReturnType<typeof fetchPlans>> = [];
   let paymentMethods = { usdt_enabled: true, toman_enabled: true };
   let failed = false;
+  const siteConfig = await getSiteConfig();
   try {
     [plans, paymentMethods] = await Promise.all([
       fetchPlans(locale),
@@ -49,7 +51,12 @@ export default async function PlansPage({ params }: Props) {
           <p className="text-[var(--muted)]">{t("empty")}</p>
         ) : (
           <PlansSellGate>
-            <PlanTable plans={plans} locale={locale} paymentMethods={paymentMethods} />
+            <PlanTable
+              plans={plans}
+              locale={locale}
+              paymentMethods={paymentMethods}
+              plansSellEnabled={siteConfig.plans_sell_enabled}
+            />
           </PlansSellGate>
         )}
       </div>
