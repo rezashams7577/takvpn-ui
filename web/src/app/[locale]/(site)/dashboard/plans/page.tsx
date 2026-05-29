@@ -117,7 +117,9 @@ export default function DashboardPlansPage() {
                   ? formatTrafficGb(p.traffic_gb, locale)
                   : tPlans("trafficUnlimited")}
               </td>
-              <td className="px-4 py-3 text-[var(--muted)]">{tPlans("devicesUnlimited")}</td>
+              <td className="px-4 py-3 text-[var(--muted)]">
+                {tPlans("devicesCount", { count: p.max_devices ?? 1 })}
+              </td>
               <td className="px-4 py-3 font-semibold text-brand-600 whitespace-nowrap">
                 {formatPrice(p)}
               </td>

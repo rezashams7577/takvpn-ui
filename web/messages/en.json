@@ -75,7 +75,7 @@
     "duration": "Duration",
     "traffic": "Data",
     "devices": "Devices",
-    "devicesUnlimited": "Unlimited",
+    "devicesCount": "{count, plural, one {# device} other {# devices}}",
     "priceUsdt": "Price (USDT)",
     "priceToman": "Price (Toman)",
     "signUpToBuy": "Sign up to buy",

@@ -75,7 +75,7 @@
     "duration": "مدت",
     "traffic": "حجم",
     "devices": "دستگاه",
-    "devicesUnlimited": "نامحدود",
+    "devicesCount": "{count} دستگاه",
     "priceUsdt": "قیمت (USDT)",
     "priceToman": "قیمت (تومان)",
     "signUpToBuy": "ثبت‌نام برای خرید",

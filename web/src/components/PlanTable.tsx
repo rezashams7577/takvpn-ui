@@ -54,7 +54,7 @@ export async function PlanTable({
                   : t("durationUnlimited")}
               </td>
               <td className="px-4 py-3 text-[var(--muted)] whitespace-nowrap">
-                {t("devicesUnlimited")}
+                {t("devicesCount", { count: p.max_devices ?? 1 })}
               </td>
               {showUsdt && (
                 <td className="px-4 py-3 font-semibold text-brand-600 whitespace-nowrap">

@@ -18,6 +18,7 @@ export type Plan = {
   meta_description?: string;
   duration_days?: number | null;
   traffic_gb?: string;
+  max_devices: number;
   price_usdt?: string;
   price_irr?: string;
   is_active: boolean;
