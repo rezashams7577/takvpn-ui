@@ -323,3 +323,9 @@ export function vpnDownloadUrl(id: number, token?: string) {
   const q = token ? `?token=${encodeURIComponent(token)}` : "";
   return `/api/v1/vpn/${id}/download${q}`;
 }
+
+export async function retryVpnProvision(vpnId: number) {
+  return api<{ status: string }>(`/api/v1/vpn/${vpnId}/retry-provision`, {
+    method: "POST",
+  });
+}

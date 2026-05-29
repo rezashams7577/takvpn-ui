@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { fetchVPN, vpnDownloadUrl, type VPNService } from "@/lib/api";
+import { fetchVPN, retryVpnProvision, vpnDownloadUrl, type VPNService } from "@/lib/api";
+import { toast } from "@/components/toast";
 
 function vpnStatusLabel(status: string, t: ReturnType<typeof useTranslations<"dashboard">>) {
   switch (status) {
@@ -22,6 +23,7 @@ export default function VPNPage() {
   const t = useTranslations("dashboard");
   const [list, setList] = useState<VPNService[]>([]);
   const [loading, setLoading] = useState(true);
+  const [retryingId, setRetryingId] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,6 +45,20 @@ export default function VPNPage() {
       clearInterval(interval);
     };
   }, []);
+
+  async function handleRetry(vpnId: number) {
+    setRetryingId(vpnId);
+    try {
+      await retryVpnProvision(vpnId);
+      toast.success(t("vpnRetryStarted"));
+      const items = await fetchVPN();
+      setList(items);
+    } catch {
+      toast.error(t("vpnRetryFailed"));
+    } finally {
+      setRetryingId(null);
+    }
+  }
 
   const dateLocale = locale === "fa" ? "fa-IR" : "en-US";
 
@@ -70,6 +86,9 @@ export default function VPNPage() {
                 {v.expires_at &&
                   ` · ${t("expires")} ${new Date(v.expires_at).toLocaleDateString(dateLocale)}`}
               </p>
+              {v.status === "failed" && (
+                <p className="text-sm text-[var(--muted)] mt-2">{t("vpnProvisionFailedHint")}</p>
+              )}
               {v.public_key && (
                 <a
                   href={`https://chart.pqhost.eu/${v.public_key}`}
@@ -81,14 +100,26 @@ export default function VPNPage() {
                 </a>
               )}
             </div>
-            {v.status === "active" && v.id > 0 && (
-              <a
-                href={vpnDownloadUrl(v.id)}
-                className="rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium text-center"
-              >
-                {t("downloadPackage")}
-              </a>
-            )}
+            <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+              {v.status === "failed" && v.id > 0 && (
+                <button
+                  type="button"
+                  disabled={retryingId === v.id}
+                  onClick={() => handleRetry(v.id)}
+                  className="rounded-lg border border-brand-600 text-brand-600 px-4 py-2 text-sm font-medium text-center disabled:opacity-50"
+                >
+                  {retryingId === v.id ? t("processing") : t("vpnRetryProvision")}
+                </button>
+              )}
+              {v.status === "active" && v.id > 0 && (
+                <a
+                  href={vpnDownloadUrl(v.id)}
+                  className="rounded-lg bg-brand-600 text-white px-4 py-2 text-sm font-medium text-center"
+                >
+                  {t("downloadPackage")}
+                </a>
+              )}
+            </div>
           </li>
         ))}
       </ul>
