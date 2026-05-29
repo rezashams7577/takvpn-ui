@@ -22,6 +22,7 @@ services:
       NEXT_PUBLIC_USER_APP_URL: ${NEXT_PUBLIC_USER_APP_URL:-http://localhost:3000}
       NEXT_PUBLIC_ADMIN_APP_URL: ${NEXT_PUBLIC_ADMIN_APP_URL:-http://localhost:3001}
       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_PLANS_SELL_ENABLED: ${NEXT_PUBLIC_PLANS_SELL_ENABLED:-false}
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
     extra_hosts:

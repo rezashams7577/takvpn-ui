@@ -41,6 +41,7 @@ Open http://localhost:3000
 | `NEXT_PUBLIC_USER_APP_URL` | Public URL of this app (build-time) |
 | `NEXT_PUBLIC_ADMIN_APP_URL` | Admin panel URL for staff links (build-time) |
 | `NEXT_PUBLIC_APP_URL` | Canonical app URL for metadata (build-time) |
+| `NEXT_PUBLIC_PLANS_SELL_ENABLED` | Set to `true` or `1` to enable plan purchases from wallet (build-time) |
 
 ## Docker (production)
 

@@ -1,2 +1,4 @@
-/** Set to true when plan purchases are open. */
-export const PLANS_SELL_ENABLED = false;
+/** When true, customers can buy plans from wallet balance. Set NEXT_PUBLIC_PLANS_SELL_ENABLED=true */
+export const PLANS_SELL_ENABLED =
+  process.env.NEXT_PUBLIC_PLANS_SELL_ENABLED === "true" ||
+  process.env.NEXT_PUBLIC_PLANS_SELL_ENABLED === "1";
