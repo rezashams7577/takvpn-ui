@@ -167,7 +167,7 @@ export default function WalletPage() {
     e.preventDefault();
     setLoading(true);
     const amount = parseIrr(tomanDigits);
-    if (!Number.isFinite(amount) || amount < 10000) {
+    if (!Number.isFinite(amount) || amount < 1000) {
       toast.error(t("zarinpalMinAmount"));
       setLoading(false);
       return;
@@ -339,7 +339,7 @@ export default function WalletPage() {
             required
             value={tomanDigits ? formatIrr(tomanDigits, locale) : ""}
             onChange={(e) => setTomanDigits(normalizeDigits(e.target.value))}
-            placeholder={formatIrr(10000, locale)}
+            placeholder={formatIrr(1000, locale)}
           />
           <FormSubmit loading={loading}>{t("payWithZarinpal")}</FormSubmit>
         </form>
